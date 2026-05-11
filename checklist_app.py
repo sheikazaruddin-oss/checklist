@@ -8,11 +8,11 @@ st.set_page_config(
 
 checklist = {
     "CLIMB": [
-        "Lights – As Req",
-        "Ignition – As Req",
-        "Ice Protection - Set",
-        "Power - Set",
-        "Flaps – As Req",
+        "Lights",
+        "Ignition",
+        "Ice Protection",
+        "Power",
+        "Flaps",
     ],
     "ATC Interaction": [
         "Approach: Ask for weather",
@@ -43,19 +43,6 @@ st.markdown(
 
     h1, h2, h3, h4, p, label {
         color: white !important;
-    }
-
-    .logo-center {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-
-    .logo-center img {
-        width: 180px;
-        border-radius: 16px;
-        mix-blend-mode: screen;
     }
 
     .title-center {
@@ -136,14 +123,11 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown(
-    """
-    <div class="logo-center">
-        <img src="logo.png">
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+# CENTERED LOGO
+col1, col2, col3 = st.columns([1,2,1])
+
+with col2:
+    st.image("logo.png", width=220)
 
 st.markdown(
     """
