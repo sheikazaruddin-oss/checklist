@@ -8,11 +8,11 @@ st.set_page_config(
 
 checklist = {
     "CLIMB": [
-        "Lights – As Req",
-        "Ignition – As Req",
-        "Ice Protection - Set",
-        "Power - Set",
-        "Flaps – As Req",
+        "Light",
+        "Ignition",
+        "Ice Protection",
+        "Power",
+        "Flaps",
     ],
     "ATC Interaction": [
         "Approach: Ask for weather",
