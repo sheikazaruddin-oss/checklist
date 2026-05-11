@@ -8,11 +8,11 @@ st.set_page_config(
 
 checklist = {
     "CLIMB": [
-        "Lights",
-        "Ignition",
-        "Ice Protection",
-        "Power",
-        "Flaps",
+        "Lights – As Req",
+        "Ignition – As Req",
+        "Ice Protection - Set",
+        "Power - Set",
+        "Flaps – As Req",
     ],
     "ATC Interaction": [
         "Approach: Ask for weather",
@@ -25,12 +25,6 @@ for section, items in checklist.items():
     for item in items:
         key = f"{section}_{item}"
         if key not in st.session_state:
-            st.session_state[key] = False
-
-def reset_checklist():
-    for section, items in checklist.items():
-        for item in items:
-            key = f"{section}_{item}"
             st.session_state[key] = False
 
 st.markdown(
@@ -123,7 +117,9 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-col1, col2, col3 = st.columns([1, 2, 0.7])
+# LOGO MOVED 4 SPACES RIGHT
+col1, col2, col3 = st.columns([1.4, 2, 0.6])
+
 with col2:
     st.image("logo.png", width=190)
 
@@ -137,8 +133,8 @@ st.markdown(
 )
 
 total_items = sum(len(items) for items in checklist.values())
-completed_items = 0
 
+completed_items = 0
 for section, items in checklist.items():
     for item in items:
         key = f"{section}_{item}"
@@ -189,5 +185,10 @@ for section, items in checklist.items():
     st.divider()
 
 if st.button("🔄 Reset Checklist"):
-    reset_checklist()
+    for section, items in checklist.items():
+        for item in items:
+            key = f"{section}_{item}"
+            if key in st.session_state:
+                del st.session_state[key]
+
     st.rerun()
