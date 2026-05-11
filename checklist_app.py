@@ -21,18 +21,17 @@ checklist = {
     ],
 }
 
-if "checked_items" not in st.session_state:
-    st.session_state.checked_items = {}
-
 for section, items in checklist.items():
     for item in items:
         key = f"{section}_{item}"
-        if key not in st.session_state.checked_items:
-            st.session_state.checked_items[key] = False
+        if key not in st.session_state:
+            st.session_state[key] = False
 
 def reset_checklist():
-    for key in st.session_state.checked_items:
-        st.session_state.checked_items[key] = False
+    for section, items in checklist.items():
+        for item in items:
+            key = f"{section}_{item}"
+            st.session_state[key] = False
 
 st.markdown(
     """
@@ -47,71 +46,72 @@ st.markdown(
 
     .title-center {
         text-align: center;
-        font-size: 44px;
+        font-size: 34px;
         font-weight: 800;
         color: white;
-        margin-bottom: 35px;
+        margin-bottom: 20px;
     }
 
     .section-title {
         background-color: #1e293b;
         color: white;
-        padding: 16px;
-        border-radius: 12px;
-        font-size: 26px;
+        padding: 10px;
+        border-radius: 10px;
+        font-size: 20px;
         font-weight: bold;
-        margin-top: 25px;
-        margin-bottom: 18px;
+        margin-top: 18px;
+        margin-bottom: 10px;
         border: 1px solid #334155;
     }
 
     .item-box {
         background-color: #1e293b;
-        padding: 16px;
-        border-radius: 12px;
+        padding: 9px 12px;
+        border-radius: 10px;
         border: 1px solid #334155;
-        font-size: 21px;
-        font-weight: 600;
+        font-size: 15px;
+        font-weight: 500;
         color: white;
-        margin-bottom: 12px;
+        margin-bottom: 6px;
     }
 
     .status-green {
         background-color: #16a34a;
         color: white;
-        padding: 12px 18px;
-        border-radius: 20px;
+        padding: 7px 10px;
+        border-radius: 16px;
         text-align: center;
         font-weight: bold;
-        font-size: 16px;
-        margin-top: 6px;
+        font-size: 12px;
+        margin-top: 3px;
     }
 
     .status-red {
         background-color: #dc2626;
         color: white;
-        padding: 12px 18px;
-        border-radius: 20px;
+        padding: 7px 10px;
+        border-radius: 16px;
         text-align: center;
         font-weight: bold;
-        font-size: 16px;
-        margin-top: 6px;
+        font-size: 12px;
+        margin-top: 3px;
     }
 
     div[data-testid="stCheckbox"] {
-        transform: scale(1.7);
-        margin-top: 15px;
-        margin-left: 12px;
+        transform: scale(1.25);
+        margin-top: 6px;
+        margin-left: 8px;
     }
 
     div.stButton > button {
         background-color: #2563eb;
         color: white;
-        font-size: 18px;
+        font-size: 15px;
         font-weight: bold;
         border-radius: 10px;
         border: none;
-        padding: 12px 22px;
+        padding: 9px 18px;
+        margin-top: 20px;
     }
 
     div.stButton > button:hover {
@@ -123,11 +123,9 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# CENTERED LOGO
-col1, col2, col3 = st.columns([1,2,1])
-
+col1, col2, col3 = st.columns([1, 2, 0.7])
 with col2:
-    st.image("logo.png", width=220)
+    st.image("logo.png", width=190)
 
 st.markdown(
     """
@@ -139,16 +137,19 @@ st.markdown(
 )
 
 total_items = sum(len(items) for items in checklist.values())
-completed_items = sum(st.session_state.checked_items.values())
+completed_items = 0
+
+for section, items in checklist.items():
+    for item in items:
+        key = f"{section}_{item}"
+        if st.session_state[key]:
+            completed_items += 1
+
 progress = completed_items / total_items
 
 st.subheader("Checklist Completion Status")
 st.progress(progress)
 st.write(f"Completed: {completed_items} / {total_items}")
-
-if st.button("🔄 Reset Checklist"):
-    reset_checklist()
-    st.rerun()
 
 st.divider()
 
@@ -162,16 +163,10 @@ for section, items in checklist.items():
     for item in items:
         key = f"{section}_{item}"
 
-        col1, col2, col3 = st.columns([1, 5, 2])
+        col1, col2, col3 = st.columns([0.7, 5, 1.6])
 
         with col1:
-            checked = st.checkbox(
-                "",
-                value=st.session_state.checked_items[key],
-                key=key
-            )
-
-        st.session_state.checked_items[key] = checked
+            checked = st.checkbox("", key=key)
 
         with col2:
             st.markdown(
@@ -192,3 +187,7 @@ for section, items in checklist.items():
                 )
 
     st.divider()
+
+if st.button("🔄 Reset Checklist"):
+    reset_checklist()
+    st.rerun()
