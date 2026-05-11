@@ -207,4 +207,4 @@ for section, items in checklist.items():
                     unsafe_allow_html=True
                 )
 
-    st.divider(
+    st.divider()
