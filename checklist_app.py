@@ -217,7 +217,7 @@ def flap_control(page):
         <div style="
             position:absolute;
             left:22px;
-            top:50px;
+            top:35px;
             color:white;
             font-size:18px;
             font-weight:900;
