@@ -206,6 +206,7 @@ def flap_control(page):
             else:
                 if st.button(f"{flap_value}°", key=f"{page}_flap_{flap_value}"):
                     st.session_state[flaps_key] = flap_value
+                    st.rerun()
             
 
     positions = {
