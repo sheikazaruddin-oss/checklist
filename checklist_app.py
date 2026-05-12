@@ -172,11 +172,13 @@ def flap_control(page):
                     <div style="
                         background-color:#16a34a;
                         color:white;
-                        padding:10px;
+                        padding:9xp 18xp;
                         border-radius:10px;
                         text-align:center;
                         font-weight:bold;
                         margin-bottom:8px;
+                        width:100%;
+                        box-sizing:border-box;
                     ">
                         {flap_value}°
                     </div>
@@ -213,7 +215,7 @@ def flap_control(page):
         <div style="
             position:absolute;
             left:22px;
-            top:50px;
+            top:36px;
             color:white;
             font-size:18px;
             font-weight:900;
