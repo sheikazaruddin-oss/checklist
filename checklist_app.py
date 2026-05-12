@@ -92,12 +92,6 @@ div.stButton > button:hover {
     background-color: #1d4ed8;
     color: white;
 }
-
-div[data-testid="stSlider"] label {
-    color: white !important;
-    font-weight: bold;
-}
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -161,14 +155,38 @@ def flap_control(page):
 
     st.subheader("FLAPS")
 
-    selected = st.select_slider(
-        "Slide to set flap position",
-        options=[0, 10, 20, 30],
-        value=st.session_state[flaps_key],
-        key=f"{page}_flap_slider"
-    )
+    selected = st.session_state[flaps_key]
 
-    st.session_state[flaps_key] = selected
+    st.write("Select flap position")
+
+    flap_col1, flap_col2, flap_col3, flap_col4 = st.columns(4)
+
+    flap_options = [0, 10, 20, 30]
+    flap_cols = [flap_col1, flap_col2, flap_col3, flap_col4]
+
+    for flap_value, flap_col in zip(flap_options, flap_cols):
+        with flap_col:
+            if selected == flap_value:
+                st.markdown(
+                    f"""
+                    <div style="
+                        background-color:#16a34a;
+                        color:white;
+                        padding:10px;
+                        border-radius:10px;
+                        text-align:center;
+                        font-weight:bold;
+                        margin-bottom:8px;
+                    ">
+                        {flap_value}°
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+            else:
+                if st.button(f"{flap_value}°", key=f"{page}_flap_{flap_value}"):
+                    st.session_state[flaps_key] = flap_value
+                    st.rerun()
 
     positions = {
         0: 35,
@@ -195,7 +213,7 @@ def flap_control(page):
         <div style="
             position:absolute;
             left:22px;
-            top:65px;
+            top:50px;
             color:white;
             font-size:18px;
             font-weight:900;
