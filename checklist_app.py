@@ -1,4 +1,5 @@
 import streamlit as st
+import time
 
 st.set_page_config(
     page_title="Pilot Checklist",
@@ -6,26 +7,37 @@ st.set_page_config(
     layout="centered"
 )
 
-checklist = {
-    "CLIMB": [
-        "Light",
-        "Ignition",
-        "Ice Protection",
-        "Power",
-        "Flaps",
-    ],
-    "ATC Interaction": [
-        "Approach: Ask for weather",
-        "Departure: Confirm next waypoint",
-        "En Route: Confirm altitude/heading",
-    ],
+defaults = {
+    "Approach": {
+        "lights": "OFF",
+        "flaps": 0
+    },
+    "Departure": {
+        "lights": "ON",
+        "flaps": 10
+    },
+    "En Route": {
+        "lights": "OFF",
+        "flaps": 0
+    }
 }
 
-for section, items in checklist.items():
-    for item in items:
-        key = f"{section}_{item}"
-        if key not in st.session_state:
-            st.session_state[key] = False
+for page, values in defaults.items():
+    if f"{page}_lights" not in st.session_state:
+        st.session_state[f"{page}_lights"] = values["lights"]
+
+    if f"{page}_flaps" not in st.session_state:
+        st.session_state[f"{page}_flaps"] = values["flaps"]
+
+    if f"{page}_lights_loading" not in st.session_state:
+        st.session_state[f"{page}_lights_loading"] = False
+
+
+def reset_page(page):
+    st.session_state[f"{page}_lights"] = defaults[page]["lights"]
+    st.session_state[f"{page}_flaps"] = defaults[page]["flaps"]
+    st.session_state[f"{page}_lights_loading"] = False
+
 
 st.markdown(
     """
@@ -46,55 +58,127 @@ st.markdown(
         margin-bottom: 20px;
     }
 
+    .panel {
+        background-color: #1e293b;
+        padding: 18px;
+        border-radius: 14px;
+        border: 1px solid #334155;
+        margin-bottom: 20px;
+    }
+
     .section-title {
-        background-color: #1e293b;
-        color: white;
-        padding: 10px;
-        border-radius: 10px;
-        font-size: 20px;
+        font-size: 22px;
         font-weight: bold;
-        margin-top: 18px;
-        margin-bottom: 10px;
-        border: 1px solid #334155;
-    }
-
-    .item-box {
-        background-color: #1e293b;
-        padding: 9px 12px;
-        border-radius: 10px;
-        border: 1px solid #334155;
-        font-size: 15px;
-        font-weight: 500;
         color: white;
-        margin-bottom: 6px;
+        margin-bottom: 14px;
     }
 
-    .status-green {
+    .light-status-on {
         background-color: #16a34a;
         color: white;
-        padding: 7px 10px;
-        border-radius: 16px;
+        padding: 12px;
+        border-radius: 12px;
         text-align: center;
         font-weight: bold;
-        font-size: 12px;
-        margin-top: 3px;
+        font-size: 18px;
     }
 
-    .status-red {
-        background-color: #dc2626;
+    .light-status-off {
+        background-color: #475569;
         color: white;
-        padding: 7px 10px;
-        border-radius: 16px;
+        padding: 12px;
+        border-radius: 12px;
         text-align: center;
         font-weight: bold;
-        font-size: 12px;
-        margin-top: 3px;
+        font-size: 18px;
     }
 
-    div[data-testid="stCheckbox"] {
-        transform: scale(1.25);
-        margin-top: 6px;
-        margin-left: 8px;
+    .light-status-loading {
+        background-color: #f97316;
+        color: white;
+        padding: 12px;
+        border-radius: 12px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .flap-panel {
+        width: 230px;
+        height: 310px;
+        background: linear-gradient(145deg, #111827, #020617);
+        border: 3px solid #334155;
+        border-radius: 18px;
+        position: relative;
+        margin: auto;
+        box-shadow: 0px 8px 20px rgba(0,0,0,0.55);
+    }
+
+    .flap-title {
+        position: absolute;
+        left: 20px;
+        top: 35px;
+        color: white;
+        font-size: 24px;
+        font-weight: 900;
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+        letter-spacing: 2px;
+    }
+
+    .flap-slot {
+        position: absolute;
+        left: 105px;
+        top: 45px;
+        width: 14px;
+        height: 210px;
+        background-color: #020617;
+        border-radius: 12px;
+        border: 2px solid #1e293b;
+    }
+
+    .flap-label {
+        position: absolute;
+        left: 60px;
+        color: white;
+        font-size: 25px;
+        font-weight: bold;
+    }
+
+    .flap-zero { top: 38px; }
+    .flap-ten { top: 103px; }
+    .flap-twenty { top: 168px; }
+    .flap-thirty { top: 230px; }
+
+    .flap-handle {
+        position: absolute;
+        left: 115px;
+        width: 95px;
+        height: 38px;
+        background: linear-gradient(145deg, #f8fafc, #94a3b8);
+        border-radius: 8px;
+        box-shadow: 0px 5px 10px rgba(0,0,0,0.45);
+        transform: skewX(-12deg);
+    }
+
+    .flap-pointer {
+        position: absolute;
+        left: 96px;
+        width: 35px;
+        height: 8px;
+        background-color: #d1d5db;
+        border-radius: 6px;
+    }
+
+    .flap-warning {
+        position: absolute;
+        bottom: 18px;
+        left: 28px;
+        color: white;
+        font-size: 13px;
+        font-weight: bold;
+        text-align: center;
+        line-height: 16px;
     }
 
     div.stButton > button {
@@ -105,7 +189,7 @@ st.markdown(
         border-radius: 10px;
         border: none;
         padding: 9px 18px;
-        margin-top: 20px;
+        width: 100%;
     }
 
     div.stButton > button:hover {
@@ -117,9 +201,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# LOGO MOVED 4 SPACES RIGHT
 col1, col2, col3 = st.columns([1.4, 2, 0.6])
-
 with col2:
     st.image("logo.png", width=190)
 
@@ -132,63 +214,133 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-total_items = sum(len(items) for items in checklist.values())
 
-completed_items = 0
-for section, items in checklist.items():
-    for item in items:
-        key = f"{section}_{item}"
-        if st.session_state[key]:
-            completed_items += 1
+def light_control(page):
+    lights_key = f"{page}_lights"
+    loading_key = f"{page}_lights_loading"
 
-progress = completed_items / total_items
+    st.markdown("<div class='panel'>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'>TAXI / LANDING LIGHTS</div>", unsafe_allow_html=True)
 
-st.subheader("Checklist Completion Status")
-st.progress(progress)
-st.write(f"Completed: {completed_items} / {total_items}")
+    col1, col2, col3 = st.columns([1, 1, 2])
 
-st.divider()
+    with col1:
+        if st.button("ON", key=f"{page}_on"):
+            if st.session_state[lights_key] != "ON":
+                st.session_state[loading_key] = True
+                st.rerun()
 
-for section, items in checklist.items():
+    with col2:
+        if st.button("OFF", key=f"{page}_off"):
+            st.session_state[lights_key] = "OFF"
+            st.session_state[loading_key] = False
+            st.rerun()
 
-    st.markdown(
-        f"<div class='section-title'>{section}</div>",
-        unsafe_allow_html=True
-    )
+    with col3:
+        if st.session_state[loading_key]:
+            st.markdown("<div class='light-status-loading'>TURNING ON...</div>", unsafe_allow_html=True)
+            time.sleep(2)
+            st.session_state[lights_key] = "ON"
+            st.session_state[loading_key] = False
+            st.rerun()
 
-    for item in items:
-        key = f"{section}_{item}"
+        elif st.session_state[lights_key] == "ON":
+            st.markdown("<div class='light-status-on'>ON</div>", unsafe_allow_html=True)
 
-        col1, col2, col3 = st.columns([0.7, 5, 1.6])
+        else:
+            st.markdown("<div class='light-status-off'>OFF</div>", unsafe_allow_html=True)
 
-        with col1:
-            checked = st.checkbox("", key=key)
+    st.markdown("</div>", unsafe_allow_html=True)
 
-        with col2:
-            st.markdown(
-                f"<div class='item-box'>{item}</div>",
-                unsafe_allow_html=True
-            )
 
-        with col3:
-            if checked:
-                st.markdown(
-                    "<div class='status-green'>CHECKED</div>",
-                    unsafe_allow_html=True
-                )
-            else:
-                st.markdown(
-                    "<div class='status-red'>PENDING</div>",
-                    unsafe_allow_html=True
-                )
+def flap_control(page):
+    flaps_key = f"{page}_flaps"
+    selected = st.session_state[flaps_key]
 
-    st.divider()
+    positions = {
+        0: 48,
+        10: 113,
+        20: 178,
+        30: 240
+    }
 
-if st.button("🔄 Reset Checklist"):
-    for section, items in checklist.items():
-        for item in items:
-            key = f"{section}_{item}"
-            if key in st.session_state:
-                del st.session_state[key]
+    handle_top = positions[selected]
 
-    st.rerun()
+    st.markdown("<div class='panel'>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'>FLAPS</div>", unsafe_allow_html=True)
+
+    col1, col2 = st.columns([1, 3])
+
+    with col1:
+        if st.button("0°", key=f"{page}_flap_0"):
+            st.session_state[flaps_key] = 0
+            st.rerun()
+
+        if st.button("10°", key=f"{page}_flap_10"):
+            st.session_state[flaps_key] = 10
+            st.rerun()
+
+        if st.button("20°", key=f"{page}_flap_20"):
+            st.session_state[flaps_key] = 20
+            st.rerun()
+
+        if st.button("30°", key=f"{page}_flap_30"):
+            st.session_state[flaps_key] = 30
+            st.rerun()
+
+    with col2:
+        st.markdown(
+            f"""
+            <div class="flap-panel">
+                <div class="flap-title">WING FLAPS</div>
+
+                <div class="flap-label flap-zero">0°</div>
+                <div class="flap-label flap-ten">10°</div>
+                <div class="flap-label flap-twenty">20°</div>
+                <div class="flap-label flap-thirty">30°</div>
+
+                <div class="flap-slot"></div>
+
+                <div class="flap-pointer" style="top:{handle_top + 15}px;"></div>
+                <div class="flap-handle" style="top:{handle_top}px;"></div>
+
+                <div class="flap-warning">
+                    AVOID SLIPS WITH<br>
+                    FLAPS EXTENDED
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+tab1, tab2, tab3 = st.tabs(["Approach", "Departure", "En Route"])
+
+with tab1:
+    page = "Approach"
+    light_control(page)
+    flap_control(page)
+
+    if st.button("🔄 Reset Approach", key="reset_approach"):
+        reset_page(page)
+        st.rerun()
+
+with tab2:
+    page = "Departure"
+    light_control(page)
+    flap_control(page)
+
+    if st.button("🔄 Reset Departure", key="reset_departure"):
+        reset_page(page)
+        st.rerun()
+
+with tab3:
+    page = "En Route"
+    light_control(page)
+    flap_control(page)
+
+    if st.button("🔄 Reset En Route", key="reset_enroute"):
+        reset_page(page)
+        st.rerun()
