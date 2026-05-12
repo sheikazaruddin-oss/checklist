@@ -92,6 +92,23 @@ div.stButton > button:hover {
     background-color: #1d4ed8;
     color: white;
 }
+
+button, button:hover, button:focus, button:active {
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+iframe {
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+[data-testid="stHorizontalBlock"],
+[data-testid="column"],
+[data-testid="stMarkdownContainer"] {
+    opacity: 1 !important;
+    filter: none !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -178,9 +195,8 @@ def flap_control(page):
                         font-weight:bold;
                         margin-bottom:8px;
                         width:68px;
-                        margin-left:auto;
-                        margin-right:auto;
-                        box-sizing:border-box;
+                        margin-left:0px;
+                        margin-right:0px;
                     ">
                         {flap_value}°
                     </div>
@@ -217,7 +233,7 @@ def flap_control(page):
         <div style="
             position:absolute;
             left:22px;
-            top:35px;
+            top:34px;
             color:white;
             font-size:18px;
             font-weight:900;
