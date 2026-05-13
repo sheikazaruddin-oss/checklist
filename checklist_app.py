@@ -47,24 +47,76 @@ h1, h2, h3, h4, p, label {
     margin-bottom: 20px;
 }
 
-.light-on-box {
-    background-color: #16a34a;
-    color: white;
-    padding: 14px;
-    border-radius: 12px;
+.light-switch-panel {
+    background: linear-gradient(145deg, #111827, #020617);
+    border: 3px solid #334155;
+    border-radius: 16px;
+    padding: 18px;
     text-align: center;
-    font-size: 18px;
-    font-weight: bold;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.55);
 }
 
-.light-off-box {
-    background-color: #475569;
+.light-switch-base {
+    width: 110px;
+    height: 135px;
+    background: radial-gradient(circle at center, #1f2937, #020617);
+    border: 3px solid #64748b;
+    border-radius: 50%;
+    margin: auto;
+    position: relative;
+}
+
+.light-switch-lever-on {
+    width: 18px;
+    height: 82px;
+    background: linear-gradient(180deg, #e5e7eb, #94a3b8);
+    border-radius: 10px;
+    position: absolute;
+    left: 43px;
+    top: 20px;
+    transform: rotate(-25deg);
+    transform-origin: bottom center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+}
+
+.light-switch-lever-off {
+    width: 18px;
+    height: 82px;
+    background: linear-gradient(180deg, #e5e7eb, #94a3b8);
+    border-radius: 10px;
+    position: absolute;
+    left: 43px;
+    top: 30px;
+    transform: rotate(25deg);
+    transform-origin: bottom center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+}
+
+.light-indicator-on {
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fde68a 0%, #facc15 35%, #ca8a04 75%);
+    margin: auto;
+    box-shadow: 0 0 35px #fde047, 0 0 70px #facc15;
+    border: 3px solid #fef3c7;
+}
+
+.light-indicator-off {
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #334155 0%, #1e293b 55%, #020617 100%);
+    margin: auto;
+    box-shadow: none;
+    border: 3px solid #475569;
+}
+
+.light-label {
     color: white;
-    padding: 14px;
-    border-radius: 12px;
-    text-align: center;
     font-size: 18px;
     font-weight: bold;
+    margin-top: 12px;
 }
 
 .light-loading-box {
@@ -129,21 +181,44 @@ def light_control(page):
 
     st.subheader("TAXI / LANDING LIGHTS")
 
-    col1, col2, col3 = st.columns([1, 1, 2])
+    col1, col2, col3 = st.columns([1.3, 1.3, 1.6])
 
     with col1:
-        if st.button("ON", key=f"{page}_on"):
-            if st.session_state[lights_key] != "ON":
+        if st.button("Toggle Switch", key=f"{page}_toggle_light"):
+            if st.session_state[lights_key] == "ON":
+                st.session_state[lights_key] = "OFF"
+                st.session_state[loading_key] = False
+                st.rerun()
+            else:
                 st.session_state[loading_key] = True
                 st.rerun()
 
-    with col2:
-        if st.button("OFF", key=f"{page}_off"):
-            st.session_state[lights_key] = "OFF"
-            st.session_state[loading_key] = False
-            st.rerun()
+        if st.session_state[lights_key] == "ON":
+            st.markdown(
+                """
+                <div class="light-switch-panel">
+                    <div class="light-switch-base">
+                        <div class="light-switch-lever-on"></div>
+                    </div>
+                    <div class="light-label">SWITCH ON</div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+        else:
+            st.markdown(
+                """
+                <div class="light-switch-panel">
+                    <div class="light-switch-base">
+                        <div class="light-switch-lever-off"></div>
+                    </div>
+                    <div class="light-label">SWITCH OFF</div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
-    with col3:
+    with col2:
         if st.session_state[loading_key]:
             st.markdown(
                 "<div class='light-loading-box'>TURNING ON...</div>",
@@ -156,13 +231,19 @@ def light_control(page):
 
         elif st.session_state[lights_key] == "ON":
             st.markdown(
-                "<div class='light-on-box'>ON</div>",
+                """
+                <div class="light-indicator-on"></div>
+                <div class="light-label" style="text-align:center;">LIGHT ON</div>
+                """,
                 unsafe_allow_html=True
             )
 
         else:
             st.markdown(
-                "<div class='light-off-box'>OFF</div>",
+                """
+                <div class="light-indicator-off"></div>
+                <div class="light-label" style="text-align:center;">LIGHT OFF</div>
+                """,
                 unsafe_allow_html=True
             )
 
@@ -174,15 +255,23 @@ def flap_control(page):
 
     selected = st.session_state[flaps_key]
 
-    st.write("Select flap position")
+    positions = {
+        0: 35,
+        10: 95,
+        20: 155,
+        30: 215
+    }
 
-    flap_col1, flap_col2, flap_col3, flap_col4 = st.columns(4)
+    handle_top = positions[selected]
 
-    flap_options = [0, 10, 20, 30]
-    flap_cols = [flap_col1, flap_col2, flap_col3, flap_col4]
+    main_col1, main_col2 = st.columns([1, 3])
 
-    for flap_value, flap_col in zip(flap_options, flap_cols):
-        with flap_col:
+    with main_col1:
+        st.markdown("<div style='height:38px;'></div>", unsafe_allow_html=True)
+
+        flap_options = [0, 10, 20, 30]
+
+        for flap_value in flap_options:
             if selected == flap_value:
                 st.markdown(
                     f"""
@@ -193,7 +282,7 @@ def flap_control(page):
                         border-radius:10px;
                         text-align:center;
                         font-weight:bold;
-                        margin-bottom:8px;
+                        margin-bottom:22px;
                         width:68px;
                         margin-left:0px;
                         margin-right:0px;
@@ -207,96 +296,87 @@ def flap_control(page):
                 if st.button(f"{flap_value}°", key=f"{page}_flap_{flap_value}"):
                     st.session_state[flaps_key] = flap_value
                     st.rerun()
-            
 
-    positions = {
-        0: 35,
-        10: 95,
-        20: 155,
-        30: 215
-    }
-
-    handle_top = positions[selected]
-
-    components.html(f"""
-    <div style="
-        width:300px;
-        height:340px;
-        background:linear-gradient(145deg,#111827,#020617);
-        border:4px solid #334155;
-        border-radius:18px;
-        position:relative;
-        margin:auto;
-        box-shadow:0 8px 25px rgba(0,0,0,0.7);
-        font-family:Arial;
-    ">
-
+    with main_col2:
+        components.html(f"""
         <div style="
-            position:absolute;
-            left:22px;
-            top:34px;
-            color:white;
-            font-size:18px;
-            font-weight:900;
-            writing-mode:vertical-rl;
-            text-orientation:upright;
-            letter-spacing:1px;
-        ">WING FLAPS</div>
-
-        <div style="position:absolute; left:100px; top:25px; color:white; font-size:26px; font-weight:bold;">0°</div>
-        <div style="position:absolute; left:100px; top:85px; color:white; font-size:26px; font-weight:bold;">10°</div>
-        <div style="position:absolute; left:100px; top:145px; color:white; font-size:26px; font-weight:bold;">20°</div>
-        <div style="position:absolute; left:100px; top:205px; color:white; font-size:26px; font-weight:bold;">30°</div>
-
-        <div style="
-            position:absolute;
-            left:170px;
-            top:35px;
-            width:16px;
-            height:220px;
-            background:#020617;
-            border-radius:12px;
-            border:2px solid #1e293b;
-        "></div>
-
-        <div style="
-            position:absolute;
-            left:153px;
-            top:{handle_top + 15}px;
-            width:42px;
-            height:8px;
-            background:#d1d5db;
-            border-radius:6px;
-        "></div>
-
-        <div style="
-            position:absolute;
-            left:185px;
-            top:{handle_top}px;
-            width:90px;
-            height:40px;
-            background:linear-gradient(145deg,#f8fafc,#94a3b8);
-            border-radius:8px;
-            box-shadow:0 5px 10px rgba(0,0,0,0.5);
-            transform:skewX(-12deg);
-        "></div>
-
-        <div style="
-            position:absolute;
-            bottom:18px;
-            left: 82px;
-            color:white;
-            font-size:14px;
-            font-weight:bold;
-            text-align:center;
-            line-height:17px;
+            width:300px;
+            height:340px;
+            background:linear-gradient(145deg,#111827,#020617);
+            border:4px solid #334155;
+            border-radius:18px;
+            position:relative;
+            margin:auto;
+            box-shadow:0 8px 25px rgba(0,0,0,0.7);
+            font-family:Arial;
         ">
-            AVOID SLIPS WITH<br>
-            FLAPS EXTENDED
-        </div>
 
-    </div>
-    """, height=360)
+            <div style="
+                position:absolute;
+                left:22px;
+                top:34px;
+                color:white;
+                font-size:18px;
+                font-weight:900;
+                writing-mode:vertical-rl;
+                text-orientation:upright;
+                letter-spacing:1px;
+            ">WING FLAPS</div>
+
+            <div style="position:absolute; left:100px; top:25px; color:white; font-size:26px; font-weight:bold;">0°</div>
+            <div style="position:absolute; left:100px; top:85px; color:white; font-size:26px; font-weight:bold;">10°</div>
+            <div style="position:absolute; left:100px; top:145px; color:white; font-size:26px; font-weight:bold;">20°</div>
+            <div style="position:absolute; left:100px; top:205px; color:white; font-size:26px; font-weight:bold;">30°</div>
+
+            <div style="
+                position:absolute;
+                left:170px;
+                top:35px;
+                width:16px;
+                height:220px;
+                background:#020617;
+                border-radius:12px;
+                border:2px solid #1e293b;
+            "></div>
+
+            <div style="
+                position:absolute;
+                left:153px;
+                top:{handle_top + 15}px;
+                width:42px;
+                height:8px;
+                background:#d1d5db;
+                border-radius:6px;
+            "></div>
+
+            <div style="
+                position:absolute;
+                left:185px;
+                top:{handle_top}px;
+                width:90px;
+                height:40px;
+                background:linear-gradient(145deg,#f8fafc,#94a3b8);
+                border-radius:8px;
+                box-shadow:0 5px 10px rgba(0,0,0,0.5);
+                transform:skewX(-12deg);
+            "></div>
+
+            <div style="
+                position:absolute;
+                bottom:18px;
+                left:65px;
+                color:white;
+                font-size:14px;
+                font-weight:bold;
+                text-align:center;
+                line-height:17px;
+            ">
+                AVOID SLIPS WITH<br>
+                FLAPS EXTENDED
+            </div>
+
+        </div>
+        """, height=360)
 
 
 tab1, tab2, tab3 = st.tabs(["Approach", "Departure", "En Route"])
