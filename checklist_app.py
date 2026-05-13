@@ -67,28 +67,27 @@ h1, h2, h3, h4, p, label {
 }
 
 .light-switch-lever-on {
-    width: 80px;
-    height: 18px;
-    background: linear-gradient(90deg, #e5e7eb, #94a3b8);
-    border-radius: 10px;
+    width: 78px;
+    height: 34px;
+    background: linear-gradient(145deg,#f8fafc,#94a3b8);
+    border-radius: 8px;
     position: absolute;
-    left: 13px;
-    top: 35px;
-    transform: rotate(0deg);
-    transform-origin: bottom center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    left: 42px;
+    top: 18px;
+    transform: skewX(-12deg);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
 }
 
 .light-switch-lever-off {
-    width: 80px;
-    height: 18px;
-    background: linear-gradient(90deg, #e5e7eb, #94a3b8);
-    border-radius: 10px;
+    width: 78px;
+    height: 34px;
+    background: linear-gradient(145deg,#f8fafc,#94a3b8);
+    border-radius: 8px;
     position: absolute;
-    left: 13px;
-    top: 82px;
-    transform: rotate(0deg);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    left: 42px;
+    top: 78px;
+    transform: skewX(-12deg);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
 }
 
 .light-indicator-on {
@@ -197,8 +196,20 @@ def light_control(page):
                 """
                 <div class="light-switch-panel">
                     <div class="light-switch-base">
+
+                        <div style="
+                            position:absolute;
+                            left:20px;
+                            top:34px;
+                            width:32px;
+                            height:8px;
+                            background:#d1d5db;
+                            border-radius:6px;
+                        "></div>
+
                         <div class="light-switch-lever-on"></div>
                     </div>
+
                     <div class="light-label">SWITCH ON</div>
                 </div>
                 """,
@@ -209,8 +220,20 @@ def light_control(page):
                 """
                 <div class="light-switch-panel">
                     <div class="light-switch-base">
+
+                        <div style="
+                            position:absolute;
+                            left:20px;
+                            top:94px;
+                            width:32px;
+                            height:8px;
+                            background:#d1d5db;
+                            border-radius:6px;
+                        "></div>
+
                         <div class="light-switch-lever-off"></div>
                     </div>
+
                     <div class="light-label">SWITCH OFF</div>
                 </div>
                 """,
