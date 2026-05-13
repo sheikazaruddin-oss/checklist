@@ -67,28 +67,27 @@ h1, h2, h3, h4, p, label {
 }
 
 .light-switch-lever-on {
-    width: 18px;
-    height: 82px;
-    background: linear-gradient(180deg, #e5e7eb, #94a3b8);
+    width: 80px;
+    height: 18px;
+    background: linear-gradient(90deg, #e5e7eb, #94a3b8);
     border-radius: 10px;
     position: absolute;
-    left: 43px;
-    top: 20px;
-    transform: rotate(-25deg);
+    left: 13px;
+    top: 35px;
+    transform: rotate(0deg);
     transform-origin: bottom center;
     box-shadow: 0 4px 8px rgba(0,0,0,0.6);
 }
 
 .light-switch-lever-off {
-    width: 18px;
-    height: 82px;
-    background: linear-gradient(180deg, #e5e7eb, #94a3b8);
+    width: 80px;
+    height: 18px;
+    background: linear-gradient(90deg, #e5e7eb, #94a3b8);
     border-radius: 10px;
     position: absolute;
-    left: 43px;
-    top: 30px;
-    transform: rotate(25deg);
-    transform-origin: bottom center;
+    left: 13px;
+    top: 82px;
+    transform: rotate(0deg);
     box-shadow: 0 4px 8px rgba(0,0,0,0.6);
 }
 
