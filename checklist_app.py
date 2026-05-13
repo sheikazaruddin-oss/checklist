@@ -264,40 +264,9 @@ def flap_control(page):
 
     handle_top = positions[selected]
 
-    main_col1, main_col2 = st.columns([1, 3])
+    main_col1, main_col2 = st.columns([3, 1])
 
     with main_col1:
-        st.markdown("<div style='height:38px;'></div>", unsafe_allow_html=True)
-
-        flap_options = [0, 10, 20, 30]
-
-        for flap_value in flap_options:
-            if selected == flap_value:
-                st.markdown(
-                    f"""
-                    <div style="
-                        background-color:#16a34a;
-                        color:white;
-                        padding:9px 0px;
-                        border-radius:10px;
-                        text-align:center;
-                        font-weight:bold;
-                        margin-bottom:22px;
-                        width:68px;
-                        margin-left:0px;
-                        margin-right:0px;
-                    ">
-                        {flap_value}°
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-            else:
-                if st.button(f"{flap_value}°", key=f"{page}_flap_{flap_value}"):
-                    st.session_state[flaps_key] = flap_value
-                    st.rerun()
-
-    with main_col2:
         components.html(f"""
         <div style="
             width:300px;
@@ -377,6 +346,37 @@ def flap_control(page):
 
         </div>
         """, height=360)
+
+    with main_col2:
+        st.markdown("<div style='height:38px;'></div>", unsafe_allow_html=True)
+
+        flap_options = [0, 10, 20, 30]
+
+        for flap_value in flap_options:
+            if selected == flap_value:
+                st.markdown(
+                    f"""
+                    <div style="
+                        background-color:#16a34a;
+                        color:white;
+                        padding:9px 0px;
+                        border-radius:10px;
+                        text-align:center;
+                        font-weight:bold;
+                        margin-bottom:22px;
+                        width:68px;
+                        margin-left:0px;
+                        margin-right:0px;
+                    ">
+                        {flap_value}°
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+            else:
+                if st.button(f"{flap_value}°", key=f"{page}_flap_{flap_value}"):
+                    st.session_state[flaps_key] = flap_value
+                    st.rerun()
 
 
 tab1, tab2, tab3 = st.tabs(["Approach", "Departure", "En Route"])
