@@ -64,11 +64,11 @@ h1, h2, h3, h4, p, label {
     width: 95px;
     height: 95px;
     border-radius: 50%;
-    background: radial-gradient(circle,#22c55e,#15803d);
+    background: radial-gradient(circle,#fde68a 0%,#facc15 35%, #ca8a04 75%);
     margin: auto;
     margin-top: 38px;
-    box-shadow: 0 0 35px #22c55e;
-    border: 4px solid #86efac;
+    box-shadow: 0 0 35px #fde047, 0 0 70px #facc15;
+    border: 4px solid #fef3c7;
 }
 
 .light-indicator-off {
@@ -156,8 +156,8 @@ def light_control(page):
                 st.rerun()
 
         switch_text = "SWITCH ON" if st.session_state[lights_key] == "ON" else "SWITCH OFF"
-        lever_top = 26 if st.session_state[lights_key] == "ON" else 86
-        stem_top = 38 if st.session_state[lights_key] == "ON" else 98
+        lever_top = 30 if st.session_state[lights_key] == "ON" else 76
+        stem_top = 38 if st.session_state[lights_key] == "ON" else 84
 
         components.html(f"""
         <div style="
@@ -191,10 +191,10 @@ def light_control(page):
 
             <div style="
                 position:absolute;
-                left:76px;
+                left:48px;
                 top:{lever_top}px;
-                width:62px;
-                height:26px;
+                width:44px;
+                height:20px;
                 background:linear-gradient(145deg,#f8fafc,#cbd5e1);
                 border-radius:12px;
                 transform:skewX(-18deg);
