@@ -156,8 +156,8 @@ def light_control(page):
                 st.rerun()
 
         switch_text = "SWITCH ON" if st.session_state[lights_key] == "ON" else "SWITCH OFF"
-        lever_top = 30 if st.session_state[lights_key] == "ON" else 76
-        stem_top = 38 if st.session_state[lights_key] == "ON" else 84
+        lever_top = 22 if st.session_state[lights_key] == "ON" else 72
+        stem_top = 30 if st.session_state[lights_key] == "ON" else 80
 
         components.html(f"""
         <div style="
@@ -181,22 +181,22 @@ def light_control(page):
 
             <div style="
                 position:absolute;
-                left:48px;
+                left:70px;
                 top:{stem_top}px;
-                width:32px;
-                height:8px;
+                width:22px;
+                height:7px;
                 background:#d1d5db;
                 border-radius:6px;
             "></div>
 
             <div style="
                 position:absolute;
-                left:48px;
+                left:86px;
                 top:{lever_top}px;
-                width:44px;
+                width:46px;
                 height:20px;
                 background:linear-gradient(145deg,#f8fafc,#cbd5e1);
-                border-radius:12px;
+                border-radius:10px;
                 transform:skewX(-18deg);
                 box-shadow:0 4px 10px rgba(0,0,0,0.6);
             "></div>
