@@ -50,26 +50,6 @@ h1, h2, h3, h4, p, label {
     margin-bottom: 20px;
 }
 
-.light-on-box {
-    background-color: #16a34a;
-    color: white;
-    padding: 14px;
-    border-radius: 12px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.light-off-box {
-    background-color: #475569;
-    color: white;
-    padding: 14px;
-    border-radius: 12px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-}
-
 .light-loading-box {
     background-color: #f97316;
     color: white;
@@ -78,50 +58,6 @@ h1, h2, h3, h4, p, label {
     text-align: center;
     font-size: 18px;
     font-weight: bold;
-}
-
-.light-switch-panel {
-    width: 170px;
-    height: 170px;
-    background: linear-gradient(145deg,#111827,#020617);
-    border: 4px solid #334155;
-    border-radius: 18px;
-    position: relative;
-    margin-top: 10px;
-}
-
-.light-switch-base {
-    position: absolute;
-    left: 36px;
-    top: 16px;
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    border: 4px solid #94a3b8;
-}
-
-.light-switch-lever-on {
-    position: absolute;
-    left: 48px;
-    top: 26px;
-    width: 62px;
-    height: 26px;
-    background: linear-gradient(145deg,#f8fafc,#cbd5e1);
-    border-radius: 12px;
-    transform: skewX(-18deg);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-}
-
-.light-switch-lever-off {
-    position: absolute;
-    left: 48px;
-    top: 86px;
-    width: 62px;
-    height: 26px;
-    background: linear-gradient(145deg,#f8fafc,#cbd5e1);
-    border-radius: 12px;
-    transform: skewX(-18deg);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
 }
 
 .light-indicator-on {
@@ -202,7 +138,6 @@ st.markdown("""
 
 
 def light_control(page):
-
     lights_key = f"{page}_lights"
     loading_key = f"{page}_lights_loading"
 
@@ -211,74 +146,77 @@ def light_control(page):
     col1, col2, col3 = st.columns([1.3, 1.3, 1.6])
 
     with col1:
-
         if st.button("Toggle Switch", key=f"{page}_toggle_light"):
-
             if st.session_state[lights_key] == "ON":
                 st.session_state[lights_key] = "OFF"
                 st.session_state[loading_key] = False
                 st.rerun()
-
             else:
                 st.session_state[loading_key] = True
                 st.rerun()
 
-        if st.session_state[lights_key] == "ON":
+        switch_text = "SWITCH ON" if st.session_state[lights_key] == "ON" else "SWITCH OFF"
+        lever_top = 26 if st.session_state[lights_key] == "ON" else 86
+        stem_top = 38 if st.session_state[lights_key] == "ON" else 98
 
-            st.markdown("""
-<div class="light-switch-panel">
-
-    <div class="light-switch-base">
-
+        components.html(f"""
         <div style="
-            position:absolute;
-            left:20px;
-            top:34px;
-            width:32px;
-            height:8px;
-            background:#d1d5db;
-            border-radius:6px;
-        "></div>
+            width:170px;
+            height:170px;
+            background:linear-gradient(145deg,#111827,#020617);
+            border:4px solid #334155;
+            border-radius:18px;
+            position:relative;
+            font-family:Arial;
+        ">
+            <div style="
+                position:absolute;
+                left:36px;
+                top:16px;
+                width:90px;
+                height:90px;
+                border-radius:50%;
+                border:4px solid #94a3b8;
+            "></div>
 
-        <div class="light-switch-lever-on"></div>
+            <div style="
+                position:absolute;
+                left:48px;
+                top:{stem_top}px;
+                width:32px;
+                height:8px;
+                background:#d1d5db;
+                border-radius:6px;
+            "></div>
 
-    </div>
+            <div style="
+                position:absolute;
+                left:76px;
+                top:{lever_top}px;
+                width:62px;
+                height:26px;
+                background:linear-gradient(145deg,#f8fafc,#cbd5e1);
+                border-radius:12px;
+                transform:skewX(-18deg);
+                box-shadow:0 4px 10px rgba(0,0,0,0.6);
+            "></div>
 
-    <div class="light-label">SWITCH ON</div>
-
-</div>
-""", unsafe_allow_html=True)
-
-        else:
-
-            st.markdown("""
-<div class="light-switch-panel">
-
-    <div class="light-switch-base">
-
-        <div style="
-            position:absolute;
-            left:20px;
-            top:94px;
-            width:32px;
-            height:8px;
-            background:#d1d5db;
-            border-radius:6px;
-        "></div>
-
-        <div class="light-switch-lever-off"></div>
-
-    </div>
-
-    <div class="light-label">SWITCH OFF</div>
-
-</div>
-""", unsafe_allow_html=True)
+            <div style="
+                position:absolute;
+                bottom:12px;
+                width:100%;
+                text-align:center;
+                color:white;
+                font-size:16px;
+                font-weight:bold;
+            ">
+                {switch_text}
+            </div>
+        </div>
+        """, height=185)
 
     with col2:
-
         if st.session_state[loading_key]:
-
             st.markdown(
                 "<div class='light-loading-box'>TURNING ON...</div>",
                 unsafe_allow_html=True
