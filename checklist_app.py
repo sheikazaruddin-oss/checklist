@@ -156,7 +156,7 @@ def light_control(page):
                 st.rerun()
 
         switch_text = "SWITCH ON" if st.session_state[lights_key] == "ON" else "SWITCH OFF"
-        lever_top = 22 if st.session_state[lights_key] == "ON" else 72
+        lever_top = 30 if st.session_state[lights_key] == "ON" else 72
         stem_top = 30 if st.session_state[lights_key] == "ON" else 80
 
         components.html(f"""
@@ -213,7 +213,7 @@ def light_control(page):
                 {switch_text}
             </div>
         </div>
-        """, height=185)
+        """, height=230)
 
     with col2:
         if st.session_state[loading_key]:
