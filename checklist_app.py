@@ -66,7 +66,7 @@ h1, h2, h3, h4, p, label {
     border-radius: 50%;
     background: radial-gradient(circle,#fde68a 0%,#facc15 35%, #ca8a04 75%);
     margin: auto;
-    margin-top: 85px;
+    margin-top: 95px;
     box-shadow: 0 0 35px #fde047, 0 0 70px #facc15;
     border: 4px solid #fef3c7;
 }
@@ -77,7 +77,7 @@ h1, h2, h3, h4, p, label {
     border-radius: 50%;
     background: #334155;
     margin: auto;
-    margin-top: 85px;
+    margin-top: 95px;
     border: 4px solid #64748b;
 }
 
