@@ -17,8 +17,10 @@ defaults = {
 for page, values in defaults.items():
     if f"{page}_lights" not in st.session_state:
         st.session_state[f"{page}_lights"] = values["lights"]
+
     if f"{page}_flaps" not in st.session_state:
         st.session_state[f"{page}_flaps"] = values["flaps"]
+
     if f"{page}_lights_loading" not in st.session_state:
         st.session_state[f"{page}_lights_loading"] = False
 
@@ -31,6 +33,7 @@ def reset_page(page):
 
 st.markdown("""
 <style>
+
 .stApp {
     background-color: #0f172a;
 }
@@ -47,74 +50,24 @@ h1, h2, h3, h4, p, label {
     margin-bottom: 20px;
 }
 
-.light-switch-panel {
-    background: linear-gradient(145deg, #111827, #020617);
-    border: 3px solid #334155;
-    border-radius: 16px;
-    padding: 18px;
-    text-align: center;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.55);
-}
-
-.light-switch-base {
-    width: 110px;
-    height: 135px;
-    background: radial-gradient(circle at center, #1f2937, #020617);
-    border: 3px solid #64748b;
-    border-radius: 50%;
-    margin: auto;
-    position: relative;
-}
-
-.light-switch-lever-on {
-    width: 78px;
-    height: 34px;
-    background: linear-gradient(145deg,#f8fafc,#94a3b8);
-    border-radius: 8px;
-    position: absolute;
-    left: 42px;
-    top: 18px;
-    transform: skewX(-12deg);
-    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
-}
-
-.light-switch-lever-off {
-    width: 78px;
-    height: 34px;
-    background: linear-gradient(145deg,#f8fafc,#94a3b8);
-    border-radius: 8px;
-    position: absolute;
-    left: 42px;
-    top: 78px;
-    transform: skewX(-12deg);
-    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
-}
-
-.light-indicator-on {
-    width: 95px;
-    height: 95px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #fde68a 0%, #facc15 35%, #ca8a04 75%);
-    margin: auto;
-    box-shadow: 0 0 35px #fde047, 0 0 70px #facc15;
-    border: 3px solid #fef3c7;
-}
-
-.light-indicator-off {
-    width: 95px;
-    height: 95px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #334155 0%, #1e293b 55%, #020617 100%);
-    margin: auto;
-    box-shadow: none;
-    border: 3px solid #475569;
-}
-
-.light-label {
+.light-on-box {
+    background-color: #16a34a;
     color: white;
+    padding: 14px;
+    border-radius: 12px;
+    text-align: center;
     font-size: 18px;
     font-weight: bold;
-    margin-top: 12px;
+}
+
+.light-off-box {
+    background-color: #475569;
+    color: white;
+    padding: 14px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .light-loading-box {
@@ -125,6 +78,79 @@ h1, h2, h3, h4, p, label {
     text-align: center;
     font-size: 18px;
     font-weight: bold;
+}
+
+.light-switch-panel {
+    width: 170px;
+    height: 170px;
+    background: linear-gradient(145deg,#111827,#020617);
+    border: 4px solid #334155;
+    border-radius: 18px;
+    position: relative;
+    margin-top: 10px;
+}
+
+.light-switch-base {
+    position: absolute;
+    left: 36px;
+    top: 16px;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 4px solid #94a3b8;
+}
+
+.light-switch-lever-on {
+    position: absolute;
+    left: 48px;
+    top: 26px;
+    width: 62px;
+    height: 26px;
+    background: linear-gradient(145deg,#f8fafc,#cbd5e1);
+    border-radius: 12px;
+    transform: skewX(-18deg);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+}
+
+.light-switch-lever-off {
+    position: absolute;
+    left: 48px;
+    top: 86px;
+    width: 62px;
+    height: 26px;
+    background: linear-gradient(145deg,#f8fafc,#cbd5e1);
+    border-radius: 12px;
+    transform: skewX(-18deg);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+}
+
+.light-indicator-on {
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+    background: radial-gradient(circle,#22c55e,#15803d);
+    margin: auto;
+    margin-top: 38px;
+    box-shadow: 0 0 35px #22c55e;
+    border: 4px solid #86efac;
+}
+
+.light-indicator-off {
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+    background: #334155;
+    margin: auto;
+    margin-top: 38px;
+    border: 4px solid #64748b;
+}
+
+.light-label {
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 12px;
 }
 
 div.stButton > button {
@@ -159,10 +185,12 @@ iframe {
     opacity: 1 !important;
     filter: none !important;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([1.4, 2, 0.6])
+
 with col2:
     st.image("logo.png", width=190)
 
@@ -174,6 +202,7 @@ st.markdown("""
 
 
 def light_control(page):
+
     lights_key = f"{page}_lights"
     loading_key = f"{page}_lights_loading"
 
@@ -182,113 +211,122 @@ def light_control(page):
     col1, col2, col3 = st.columns([1.3, 1.3, 1.6])
 
     with col1:
+
         if st.button("Toggle Switch", key=f"{page}_toggle_light"):
+
             if st.session_state[lights_key] == "ON":
                 st.session_state[lights_key] = "OFF"
                 st.session_state[loading_key] = False
                 st.rerun()
+
             else:
                 st.session_state[loading_key] = True
                 st.rerun()
 
         if st.session_state[lights_key] == "ON":
-            st.markdown(
-                """
-                <div class="light-switch-panel">
-                    <div class="light-switch-base">
 
-                        <div style="
-                            position:absolute;
-                            left:20px;
-                            top:34px;
-                            width:32px;
-                            height:8px;
-                            background:#d1d5db;
-                            border-radius:6px;
-                        "></div>
+            st.markdown("""
+<div class="light-switch-panel">
 
-                        <div class="light-switch-lever-on"></div>
-                    </div>
+    <div class="light-switch-base">
 
-                    <div class="light-label">SWITCH ON</div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+        <div style="
+            position:absolute;
+            left:20px;
+            top:34px;
+            width:32px;
+            height:8px;
+            background:#d1d5db;
+            border-radius:6px;
+        "></div>
+
+        <div class="light-switch-lever-on"></div>
+
+    </div>
+
+    <div class="light-label">SWITCH ON</div>
+
+</div>
+""", unsafe_allow_html=True)
+
         else:
-            st.markdown(
-                """
-                <div class="light-switch-panel">
-                    <div class="light-switch-base">
 
-                        <div style="
-                            position:absolute;
-                            left:20px;
-                            top:94px;
-                            width:32px;
-                            height:8px;
-                            background:#d1d5db;
-                            border-radius:6px;
-                        "></div>
+            st.markdown("""
+<div class="light-switch-panel">
 
-                        <div class="light-switch-lever-off"></div>
-                    </div>
+    <div class="light-switch-base">
 
-                    <div class="light-label">SWITCH OFF</div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+        <div style="
+            position:absolute;
+            left:20px;
+            top:94px;
+            width:32px;
+            height:8px;
+            background:#d1d5db;
+            border-radius:6px;
+        "></div>
+
+        <div class="light-switch-lever-off"></div>
+
+    </div>
+
+    <div class="light-label">SWITCH OFF</div>
+
+</div>
+""", unsafe_allow_html=True)
 
     with col2:
+
         if st.session_state[loading_key]:
+
             st.markdown(
                 "<div class='light-loading-box'>TURNING ON...</div>",
                 unsafe_allow_html=True
             )
+
             time.sleep(2)
+
             st.session_state[lights_key] = "ON"
             st.session_state[loading_key] = False
+
             st.rerun()
 
         elif st.session_state[lights_key] == "ON":
-            st.markdown(
-                """
-                <div class="light-indicator-on"></div>
-                <div class="light-label" style="text-align:center;">LIGHT ON</div>
-                """,
-                unsafe_allow_html=True
-            )
+
+            st.markdown("""
+<div class="light-indicator-on"></div>
+<div class="light-label">LIGHT ON</div>
+""", unsafe_allow_html=True)
 
         else:
-            st.markdown(
-                """
-                <div class="light-indicator-off"></div>
-                <div class="light-label" style="text-align:center;">LIGHT OFF</div>
-                """,
-                unsafe_allow_html=True
-            )
+
+            st.markdown("""
+<div class="light-indicator-off"></div>
+<div class="light-label">LIGHT OFF</div>
+""", unsafe_allow_html=True)
 
 
 def flap_control(page):
+
     flaps_key = f"{page}_flaps"
 
     st.subheader("FLAPS")
 
     selected = st.session_state[flaps_key]
 
-    positions = {
-        0: 35,
-        10: 95,
-        20: 155,
-        30: 215
-    }
+    flap_main_col1, flap_main_col2 = st.columns([2.4, 1])
 
-    handle_top = positions[selected]
+    with flap_main_col1:
 
-    main_col1, main_col2 = st.columns([3, 1])
+        positions = {
+            0: 35,
+            10: 95,
+            20: 155,
+            30: 215
+        }
 
-    with main_col1:
+        handle_top = positions[selected]
+
         components.html(f"""
         <div style="
             width:300px;
@@ -355,7 +393,7 @@ def flap_control(page):
             <div style="
                 position:absolute;
                 bottom:18px;
-                left:65px;
+                left:75px;
                 color:white;
                 font-size:14px;
                 font-weight:bold;
@@ -369,34 +407,36 @@ def flap_control(page):
         </div>
         """, height=360)
 
-    with main_col2:
-        st.markdown("<div style='height:38px;'></div>", unsafe_allow_html=True)
+    with flap_main_col2:
+
+        st.write("")
+        st.write("")
 
         flap_options = [0, 10, 20, 30]
 
         for flap_value in flap_options:
+
             if selected == flap_value:
-                st.markdown(
-                    f"""
-                    <div style="
-                        background-color:#16a34a;
-                        color:white;
-                        padding:9px 0px;
-                        border-radius:10px;
-                        text-align:center;
-                        font-weight:bold;
-                        margin-bottom:22px;
-                        width:68px;
-                        margin-left:0px;
-                        margin-right:0px;
-                    ">
-                        {flap_value}°
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+
+                st.markdown(f"""
+                <div style="
+                    background-color:#16a34a;
+                    color:white;
+                    padding:9px 0px;
+                    border-radius:10px;
+                    text-align:center;
+                    font-weight:bold;
+                    margin-bottom:12px;
+                    width:68px;
+                ">
+                    {flap_value}°
+                </div>
+                """, unsafe_allow_html=True)
+
             else:
+
                 if st.button(f"{flap_value}°", key=f"{page}_flap_{flap_value}"):
+
                     st.session_state[flaps_key] = flap_value
                     st.rerun()
 
@@ -404,7 +444,9 @@ def flap_control(page):
 tab1, tab2, tab3 = st.tabs(["Approach", "Departure", "En Route"])
 
 with tab1:
+
     page = "Approach"
+
     light_control(page)
     flap_control(page)
 
@@ -413,7 +455,9 @@ with tab1:
         st.rerun()
 
 with tab2:
+
     page = "Departure"
+
     light_control(page)
     flap_control(page)
 
@@ -422,7 +466,9 @@ with tab2:
         st.rerun()
 
 with tab3:
+
     page = "En Route"
+
     light_control(page)
     flap_control(page)
 
