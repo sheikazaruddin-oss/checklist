@@ -61,23 +61,23 @@ h1, h2, h3, h4, p, label {
 }
 
 .light-indicator-on {
-    width: 95px;
-    height: 95px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background: radial-gradient(circle,#fde68a 0%,#facc15 35%, #ca8a04 75%);
+    background: radial-gradient(circle,#fde68a 0%,#facc15 35%,#ca8a04 75%);
     margin: auto;
-    margin-top: 95px;
+    margin-top: 55px;
     box-shadow: 0 0 35px #fde047, 0 0 70px #facc15;
     border: 4px solid #fef3c7;
 }
 
 .light-indicator-off {
-    width: 95px;
-    height: 95px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background: #334155;
     margin: auto;
-    margin-top: 95px;
+    margin-top: 55px;
     border: 4px solid #64748b;
 }
 
@@ -146,18 +146,9 @@ def light_control(page):
     col1, col2, col3 = st.columns([1.3, 1.3, 1.6])
 
     with col1:
-        if st.button("Toggle Switch", key=f"{page}_toggle_light"):
-            if st.session_state[lights_key] == "ON":
-                st.session_state[lights_key] = "OFF"
-                st.session_state[loading_key] = False
-                st.rerun()
-            else:
-                st.session_state[loading_key] = True
-                st.rerun()
-
         switch_text = "SWITCH ON" if st.session_state[lights_key] == "ON" else "SWITCH OFF"
         lever_top = 30 if st.session_state[lights_key] == "ON" else 72
-        stem_top = 35.5 if st.session_state[lights_key] == "ON" else 80
+        stem_top = 34 if st.session_state[lights_key] == "ON" else 80
 
         components.html(f"""
         <div style="
@@ -213,23 +204,20 @@ def light_control(page):
                 {switch_text}
             </div>
         </div>
-        """, height=230)
+        """, height=190)
+
+        if st.button("Toggle Switch", key=f"{page}_toggle_light"):
+            if st.session_state[lights_key] == "ON":
+                st.session_state[lights_key] = "OFF"
+                st.session_state[loading_key] = False
+                st.rerun()
+            else:
+                st.session_state[lights_key] = "ON"
+                st.session_state[loading_key] = False
+                st.rerun()
 
     with col2:
-        if st.session_state[loading_key]:
-            st.markdown(
-                "<div class='light-loading-box'>TURNING ON...</div>",
-                unsafe_allow_html=True
-            )
-
-            time.sleep(2)
-
-            st.session_state[lights_key] = "ON"
-            st.session_state[loading_key] = False
-
-            st.rerun()
-
-        elif st.session_state[lights_key] == "ON":
+        if st.session_state[lights_key] == "ON":
 
             st.markdown("""
 <div class="light-indicator-on"></div>
